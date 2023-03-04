@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 import './Task.css'
 
 export default class Task extends Component {
   state = {
     editing: false,
     label: '',
+    minutes: this.props.minutes,
+    seconds: this.props.seconds,
+    play: false,
   }
   static defaultProps = {
     id: 1000,
@@ -47,22 +51,78 @@ export default class Task extends Component {
     })
   }
 
+  handleStart = (event) => {
+    event.stopPropagation()
+    event.nativeEvent.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+    event.nativeEvent.stopPropagation()
+    event.stopPropagation()
+    this.setState({
+      play: true,
+    })
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+    event.nativeEvent.stopPropagation()
+    event.stopPropagation()
+  }
+  handlePause = (event) => {
+    this.setState({
+      play: false,
+    })
+  }
+
+  timerCounter = () => {
+    const { minutes, seconds } = this.state
+    if (minutes == 0 && seconds == 0) {
+      this.setState({
+        play: false,
+      })
+      clearInterval(this.timer)
+    } else if (seconds > 0) {
+      this.setState({
+        seconds: seconds - 1,
+      })
+    } else {
+      this.setState({
+        minutes: minutes - 1,
+        seconds: 59,
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.play !== prevState.play) {
+      this.state.play ? (this.timer = setInterval(() => this.timerCounter(), 1000)) : clearInterval(this.timer)
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer)
+  }
+
   render() {
     const { id, label, date, onDeleted, onToggleDone, done, onSetUpdate } = this.props
+    const { minutes, seconds, play, editing } = this.state
+    const min = minutes < 10 ? `0${minutes}` : minutes
+    const sec = seconds < 10 ? `0${seconds}` : seconds
+    const buttonTimer = !play ? (
+      <button type="button" className="icon icon-play" onClick={this.handleStart} />
+    ) : (
+      <button type="button" className="icon icon-pause" onClick={this.handlePause} />
+    )
     let checked = null
-    let classNames = ''
+    const taskdone = classnames({ done: done })
     let viewMode = {}
     let editMode = {}
 
     let result = formatDistanceToNow(date)
 
-    if (this.state.editing) {
+    if (editing) {
       viewMode.display = 'none'
     } else {
       editMode.display = 'none'
     }
     if (done) {
-      classNames += 'done'
       checked = true
     }
 
@@ -72,8 +132,14 @@ export default class Task extends Component {
           <input className="toggle" type="checkbox" onClick={onToggleDone} checked={checked}></input>
 
           <label className="description">
-            <span className={classNames} onClick={onToggleDone}>
+            <span className={taskdone} onClick={onToggleDone}>
               {label}
+            </span>
+            <span className="timer">
+              {buttonTimer}
+              <span className="description-time">
+                {min}:{sec}
+              </span>
             </span>
             <span className="created">created {result} ago</span>
           </label>

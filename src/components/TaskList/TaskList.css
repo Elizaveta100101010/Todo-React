@@ -6,7 +6,7 @@
 
 .todo-list li {
 	position: relative;
-	font-size: 24px;
+	font-size: 18px;
 	border-bottom: 1px solid #ededed;
 }
 
@@ -154,6 +154,26 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
   }
+
+  .todo-list li .icon-play {
+    font-size: 15px;
+}
+.todo-list li .icon-pause {
+    font-size: 15px;
+}
+  .icon-pause:after {
+    content: '⏸';
+}
+
+.icon-play:after {
+    content: '▶';
+}
+
+.description-time {
+    font-size: 13px;
+    color: gray;
+	margin-left: 25px;
+}
 
   @media screen and (-webkit-min-device-pixel-ratio:0) {
 	.toggle-all,

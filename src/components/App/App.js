@@ -12,9 +12,9 @@ export default class App extends Component {
 
   state = {
     todoData: [
-      this.createTodoItem('Drink Coffee', this.date),
-      this.createTodoItem('Make Awesome App', this.date),
-      this.createTodoItem('Have a lunch', this.date),
+      this.createTodoItem('Drink Coffee', this.date, 15, 0),
+      this.createTodoItem('Make Awesome App', this.date, 15, 0),
+      this.createTodoItem('Have a lunch', this.date, 15, 0),
     ],
     filter: 'all',
   }
@@ -26,6 +26,8 @@ export default class App extends Component {
         done: false,
         id: 100,
         date: new Date(),
+        minutes: 15,
+        seconds: 0,
       },
     ],
     filter: 'all',
@@ -49,12 +51,14 @@ export default class App extends Component {
     }
   }
 
-  createTodoItem(label, date) {
+  createTodoItem(label, date, minutes, seconds) {
     return {
       label,
       done: false,
       id: this.maxId++,
       date,
+      minutes: minutes,
+      seconds: seconds,
     }
   }
 
@@ -95,8 +99,9 @@ export default class App extends Component {
       }
     })
   }
-  addItem = (text, date) => {
-    const newItem = this.createTodoItem(text, date)
+  addItem = (text, date, minutes, seconds) => {
+    console.log(text, date, minutes, seconds)
+    const newItem = this.createTodoItem(text, date, minutes, seconds)
     this.setState(({ todoData }) => {
       const newArr = [newItem, ...todoData]
       return {
@@ -105,7 +110,9 @@ export default class App extends Component {
     })
   }
 
-  onToggleDone = (id) => {
+  onToggleDone = (e, id) => {
+    /*e.preventDefault()*/
+    !e.target.value ? e.preventDefault() : null
     this.setState(({ todoData }) => {
       return {
         todoData: this.toggleProperty(todoData, id, 'done'),

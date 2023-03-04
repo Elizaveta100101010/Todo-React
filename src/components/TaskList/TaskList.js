@@ -29,7 +29,7 @@ export default class TaskList extends Component {
           {...item}
           key={id}
           onDeleted={() => onDeleted(id)}
-          onToggleDone={() => onToggleDone(id)}
+          onToggleDone={(e) => onToggleDone(e, id)}
           onSetUpdate={onSetUpdate}
         />
       )
