@@ -52,18 +52,9 @@ export default class Task extends Component {
   }
 
   handleStart = (event) => {
-    event.stopPropagation()
-    event.nativeEvent.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
-    event.nativeEvent.stopPropagation()
-    event.stopPropagation()
     this.setState({
       play: true,
     })
-    event.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
-    event.nativeEvent.stopPropagation()
-    event.stopPropagation()
   }
   handlePause = (event) => {
     this.setState({
